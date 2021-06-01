@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>practice</title>
+		<link rel="stylesheet" href="./styles.css" />
+	</head>
+
+	<body class="main-page containter flex">
+		<div class="main">
+			<h1 class="target">Target</h1>
+			<input value="Click me" onclick="alert('Click!')" type="button" />
+			<button id="rabits-btn">hey</button>
+			<button onclick="alert(this.innerHTML)">Click me</button>
+			<button class="dummy-target" id="target">Target</button>
+
+			<!-- <iframe src="/" id="iframe"></iframe>; -->
+
+			<div onclick="alert('The handler!')">
+				<em
+					>If you click on <code onclick="alert('CODE')">EM</code>, the handler
+					on <code>DIV</code> runs.</em
+				>
+			</div>
+
+			<form class="form">
+				<input type="text" class="dummyInput" />
+				<input type="text" class="dummyInput-2" />
+				<input type="range" />
+				<input type="reset" />
+			</form>
+			<show-hello name="John"></show-hello>;
+
+			<div class="text-section">
+				<p class="text">
+					Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat
+					facere dolorum blanditiis dolores beatae, voluptatem tempore earum
+					tempora fuga molestiae.
+				</p>
+			</div>
+			<h2 id="showScroll"></h2>
+		</div>
+
+		<!-- <div id="ball"></div> -->
+		<!-- <div>
+      
+    </div> -->
+		<div class="full-screen"></div>
+		<div class="full-screen">
+			<div class="bubbling-4">
+				<div class="bubbling-3">
+					<div class="bubbling-2">
+						<button class="bubbling">BUBBLING</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div contenteditable id="elem">Click and <b>edit</b>, please</div>
+
+		<!-- <iframe src="https://example.com" id="iframe"></iframe> -->
+	</body>
+
+	<script src="lesson.js"></script>
+</html>

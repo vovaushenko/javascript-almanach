@@ -1,0 +1,14 @@
+{
+  "name": "javascript-almanach",
+  "version": "1.0.0",
+  "description": "A collection of javascript lessons",
+  "main": "lesson.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "vova ushenko",
+  "license": "MIT",
+  "dependencies": {
+    "colors": "^1.4.0"
+  }
+}
