@@ -1,15 +1,16 @@
-(async () => {
-	const URLs = [
-		'https://jsonplaceholder.typicode.com/users',
-		'https://jsonplaceholder.typicode.com/albums',
-		'https://jsonplaceholder.typicode.com/posts',
-	];
+// https://leetcode.com/problems/remove-duplicates-from-sorted-array/
 
-	let requests = URLs.map(async (url) => await fetch(url));
+const removeDuplicates = (nums) => {
+	let map = nums.reduce((h, c) => ((h[c] = h[c] + 1 || 1), h), {});
 
-	const res = await Promise.all(requests).then((responses) =>
-		responses.map(async (res) => await res.json())
-	);
+	for (let i = nums.length; i >= 0; i--) {
+		if (map[nums[i]] > 1) {
+			map[nums[i]]--;
+			nums.splice(i, 1);
+		}
+	}
 
-	console.log(res);
-})();
+	return nums.length;
+};
+
+console.log(removeDuplicates([0, 0, 1, 1, 1, 2, 2, 3, 3, 4]));
