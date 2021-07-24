@@ -1,6 +1,3 @@
-https://github.com/getify/You-Dont-Know-JS/blob/2nd-ed/scope-closures/ch4.md
+https://github.com/getify/You-Dont-Know-JS/blob/2nd-ed/scope-closures/ch5.md#re-declaration
 
-// Where Exactly is this Global Scope?
-
-
-
+// Re-declaration?
