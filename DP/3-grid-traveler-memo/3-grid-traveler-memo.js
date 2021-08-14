@@ -47,6 +47,8 @@ console.log(gridTravelerMEMO(3, 3));
 console.log(gridTravelerMEMO(18, 18));
 
 //* YOUTUBE VERSION
+//* BIG O -> M*N combinations
+//! O(m*n) time , O(m+n) space
 const gridTravelerMemoTwo = (m, n, memo = {}) => {
 	const key = m + ',' + n;
 	// are the arguments in memo ?
