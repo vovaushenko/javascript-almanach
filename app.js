@@ -1,11 +1,32 @@
-const mergeAlternately = (w1, w2) => {
-	let res = '';
+const findTarget = (root, target) => {
+	let values = [];
 
-	for (let i = 0; i < Math.max(w1.length, w2.length); i++) {
-		res += (w1[i] || '') + (w2[i] || '');
+	const traverse = (node) => {
+		if (!node) return;
+
+		values.push(node.val);
+		if (node.left) traverse(node.left);
+		if (node.right) traverse(node.right);
+	};
+
+	traverse(root);
+
+	const map = values.reduce(
+		(h, c, id) => (
+			h[c] !== undefined ? (h[c] = [...h[c], id]) : (h[c] = [id]), h
+		),
+		{}
+	);
+
+	for (let i = 0; i < values.length; i++) {
+		const diff = target - values[i];
+		if (diff in map) {
+			if (diff === values[i]) {
+				if (map[diff].length >= 2) return true;
+			}
+			if (diff !== values[i]) return true;
+		}
 	}
 
-	return res;
+	return false;
 };
-
-console.log(mergeAlternately('foozzzzzz', 'bardsadsa'));

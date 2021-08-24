@@ -7,9 +7,19 @@
 //! m = targetSum, n = numbers.length
 //* TIME O(m^2*n) SPACE(m^2)
 const howSum = (target, nums) => {
-	const table = Array(targetSum + 1).fill(null);
+	const table = Array(target + 1).fill(null);
 	table[0] = [];
 	console.log(table);
+
+	for (let i = 0; i < target; i++) {
+		if (table[i] !== null) {
+			for (let num of nums) {
+				table[i + num] = [...table[i], num];
+			}
+		}
+	}
+	console.log(table);
+	return table[target];
 };
 
-howSum(7, [5, 3, 4]);
+console.log(howSum(7, [5, 3, 4]));
