@@ -21,4 +21,4 @@ const allConstruct = (target, wordBank) => {
 	return table[target.length];
 };
 
-console.log(allConstruct('purple', ['purp', 'p', 'ur', 'le', 'purp']));
+console.log(allConstruct('purple', ['purp', 'p', 'ur', 'le', 'purpl']));
