@@ -12,7 +12,7 @@ const sum = (arr) => {
 };
 console.log(sum([1, 2, 3]));
 
-const optimizedSum = (arr) => {
+const fastSum = (arr) => {
 	return _sum(arr,0);
 };
 const _sum = (arr, idx) => {
@@ -20,4 +20,4 @@ const _sum = (arr, idx) => {
 	return arr[idx] + _sum(arr, idx + 1);
 };
 
-console.log(optimizedSum([1, 2, 3]));
+console.log(fastSum([1, 2, 3]));

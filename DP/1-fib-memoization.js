@@ -29,3 +29,8 @@ const fibMemoized = (n, memo = {}) => {
 };
 
 console.log(fibMemoized(33));
+
+const cache = { 1: 1, 2: 1 };
+const fibCache = (n) => cache[n] || (cache[n] = fib(n - 1) + fib(n - 2));
+
+console.log(fibCache(44));
