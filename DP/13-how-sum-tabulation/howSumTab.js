@@ -1,25 +1,10 @@
-// howSum(7,[5,3,4]) => [4,3] , [3,4]
+// https://www.codewars.com/kata/56b7251b81290caf76000978
 
-//* Table length targetSum+1
-//* Fill in with null
-//* SEED value for 0 is []
+const getLastDigit = (id) => {};
 
-//! m = targetSum, n = numbers.length
-//* TIME O(m^2*n) SPACE(m^2)
-const howSum = (target, nums) => {
-	const table = Array(target + 1).fill(null);
-	table[0] = [];
-	console.log(table);
+const getFibByID = (id, memo = [0, 1]) =>
+	memo.length === id
+		? memo[id - 1]
+		: memo.push(memo[memo.length - 1] + memo[memo.length - 2]);
 
-	for (let i = 0; i < target; i++) {
-		if (table[i] !== null) {
-			for (let num of nums) {
-				table[i + num] = [...table[i], num];
-			}
-		}
-	}
-	console.log(table);
-	return table[target];
-};
-
-console.log(howSum(7, [5, 3, 4]));
+console.log(getFibByID(5));
