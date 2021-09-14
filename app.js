@@ -1,22 +1,23 @@
-const combinations = (elements) => {
-	if (elements.length === 0) return [[]];
-	const firstElement = elements[0];
-	const rest = elements.slice(1);
+// canSum (memo, tab)✅, comb()✅, perm()✅, howSum(memo,tab) ✅, allSum()✅, qSort()
 
-	const combinationsWithoutFirst = combinations(rest);
-	const combinationsWithFirst = [];
+const allSum = (target, candidates) => {
+	const allCombinations = [];
 
-	combinationsWithoutFirst.forEach((combination) => {
-		// create copy
-		const combWithFirst = [...combination, firstElement];
-		combinationsWithFirst.push(combWithFirst);
-	});
+	const createCombination = (comb, left, start) => {
+		if (left === 0) {
+			allCombinations.push([...comb]);
+			return;
+		}
+		if (left < 0) return;
 
-	return [...combinationsWithoutFirst, ...combinationsWithFirst];
+		for (let i = start; i < candidates.length; i++) {
+			const diff = left - candidates[i];
+			createCombination([...comb, candidates[i]], diff, i);
+		}
+	};
+
+	createCombination([], target, 0);
+	console.log(allCombinations);
 };
-//* Time(2^n)
-//* Space(n^2)
 
-console.log(combinations(['a', 'b', 'c']));
-console.log(combinations(['a', 'b']));
-console.log(combinations([]));
+console.log(allSum(13, [2, 3, 4, 5]));
