@@ -1,0 +1,121 @@
+1) What Is a Function?
+A function is a collection of code that can be executed one or more times.
+
+2)Brief Math Review
+!! In math, a function always takes input(s), and always gives an output.A term you’ll
+often hear around FP is “morphism”; this is a fancy way of describing a set of values
+that maps to another set of values, like the inputs of a function related to the outputs
+of that function.
+
+
+3)Function vs Procedure
+Functional Programming is about embracing using functions as functions in this mathematical sense.
+
+A procedure is an arbitrary collection of functionality. It may have inputs,
+it may not. It may have an output ( return value), it may not.
+
+If you plan to do Functional Programming, you should be using functions as much
+as possible, and trying to avoid procedures wherever possible. All your function s
+should take input(s) and return output(s).
+
+4)Function Input
+Arguments are the values you pass in, and parameters are the named variables inside
+the function that receive those passed-in values. Example:
+
+function foo(x,y) {
+// ..
+}
+foo(1,2) 1,2 => arguments
+x,y => parameters
+
+5)Defaulting Parameters
+As of ES6, parameters can declare default values.
+function foo(x = 3) {
+console.log( x );
+}
+
+
+6)Counting Inputs  ==function length==
+The number of arguments a function “expects” – how many arguments you’ll likely
+want to pass to it – is determined by the number of parameters that are declared:
+
+===ARITY=== 
+function foo(x,y,z) {
+// ..
+}
+foo(..) expects three arguments, because it has three declared parameters. This
+count has a special term: arity. Arity is the number of parameters in a function
+declaration. The arity of foo(..) is 3 .
+
+Furthermore, a function with arity 1 is also called “unary”, a function with arity 2 is
+also called “binary”, and a function with arity 3 or higher is called “n-ary”.
+
+function foo(x,y,z) {
+// ..
+}
+foo.length;  === 3 
+
+!!!! The length property of a function is read-only and it’s determined at
+the time you declare the function. It should be thought of as essentially
+a piece of metadata that describes something about the intended usage of
+the function.
+
+==GOTCHAS== 
+
+function foo(x,y = 2) {
+// ..
+}
+function bar(x,...args) {
+// ..
+}
+function baz( {a,b} ) {
+// ..
+}
+
+foo.length;// 1
+bar.length;// 1
+baz.length;// 1
+
+===DESTRUCTURING====
+
+function foo( [x,y,...args] = [] ) {
+// ..
+}
+foo( [1,2,3] );
+
+
+
+
+===== ARGUMENTS  =====
+function foo(x,y,z) {
+console.log( arguments.length );
+}
+foo( 3, 4 );
+// 2
+
+!!! HERE NO ARGUMENTS IN ARROW. ARROW WILL USE NODE JS ARGUMENTS
+const foo = (x, y, z) => {
+	console.log(arguments.length);
+	console.log(arguments);
+};
+foo(3, 4, 1);
+
+
+===Named Arguments=== 
+
+function foo( {x,y} = {} ) {
+console.log( x, y );
+}
+foo( {
+y: 3
+} );
+
+
+
+
+
+
+
+
+
+

@@ -1,5 +1,15 @@
-// https://github.com/getify/You-Dont-Know-JS/blob/2nd-ed/scope-closures/ch7.md#the-closure-lifecycle-and-garbage-collection-gc
+const maximumBeautyBRUTEFORCE = (items, queries) => {
+	const res = [];
+	for (let qr of queries) {
+		let maxBeauty = 0;
+		for (let item of items) {
+			if (item[0] <= qr) {
+				maxBeauty = Math.max(maxBeauty, item[1]);
+			}
+		}
+		res.push(maxBeauty);
+	}
 
-// closure garbage collection
-
-// https://github.com/getify/You-Dont-Know-JS/blob/2nd-ed/scope-closures/ch8.md
+	return res;
+};
+console.log(maximumBeautyBRUTEFORCE([[10, 1000]], [5]));

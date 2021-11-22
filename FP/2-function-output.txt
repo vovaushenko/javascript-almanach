@@ -1,0 +1,44 @@
+===Function Output=== 
+
+In JavaScript, functions always return a value
+
+A return statement can only return a single value. So if your function needs to
+return multiple values, your only viable option is to collect them into a compound
+value like an array or an object:
+
+function foo() {
+var retValue1 = 11;
+var retValue2 = 31;
+return [ retValue1, retValue2 ];
+}
+
+===Functions of Functions=== 
+
+A function that receives or returns one or more other function values has the special name: higher-order function.
+
+function forEach(list, fn) {
+	for (let v of list) {
+		fn(v);
+	}
+}
+forEach([1, 2, 3, 4, 5], function each(val) {
+	console.log(val);
+});
+
+forEach(..) is a higher-order function because it receives a function as an
+argument.
+
+!!! A higher-order function can also output another function, like:
+
+function foo() {
+	return function inner(msg) {
+		return msg.toUpperCase();
+	};
+}
+var f = foo();
+f('Hello!');
+
+
+
+Keeping Scope // 33
+
