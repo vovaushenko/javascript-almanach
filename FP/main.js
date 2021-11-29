@@ -1,7 +1,9 @@
 'use strict';
 
-const infiniteSum = (...args) => args.reduce((a, b) => a + b, 0);
-const sum5 = (a, b, c, d, e) => a + b + c + d + e;
+// PARTIAL => REVERSE ARGS => CURRY
+
+const sum = (a, b, c, d, e) => a + b + c + d + e;
+console.log(sum(1, 2, 3, 4, 5));
 
 const curry =
 	(fn) =>
@@ -14,6 +16,7 @@ const curry =
 		}
 	};
 
-const curriedSum = curry(sum5);
+const curriedSum = curry(sum);
 
-console.log(curriedSum(1)(2)(3, 4)(1));
+console.log(curriedSum(1)(2)(3)(4)(5));
+console.log(curriedSum(1, 2)(3, 4, 5));
