@@ -1,15 +1,14 @@
-const maximumBeautyBRUTEFORCE = (items, queries) => {
-	const res = [];
-	for (let qr of queries) {
-		let maxBeauty = 0;
-		for (let item of items) {
-			if (item[0] <= qr) {
-				maxBeauty = Math.max(maxBeauty, item[1]);
+const pruneTree = (root) => {
+	if (root) {
+		if (!root.left && !root.right && root.val === 0) {
+			return null;
+		} else {
+			root.left = pruneTree(root.left);
+			root.right = pruneTree(root.right);
+			if (!root.left && !root.right && root.val === 0) {
+				return null;
 			}
 		}
-		res.push(maxBeauty);
 	}
-
-	return res;
+	return root;
 };
-console.log(maximumBeautyBRUTEFORCE([[10, 1000]], [5]));

@@ -6,6 +6,23 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <style>
+    .active {
+      background-color: greenyellow;
+      color: black;
+      font-size: 1.25rem;
+    }
+
+    .error {
+      color: red;
+      font-size: 1.25rem;
+      background-color: gray;
+    }
+
+    .big {
+      font-size: 5rem;
+    }
+  </style>
 </head>
 
 <body>
@@ -14,9 +31,23 @@
   <h2>Baz</h2>
   <h2>Foo</h2>
   <div class='text-wrapper'>
-    <p id='foo' class='special'>one</p>
+    <p id='paragraph' class='special'>one</p>
     <p class='special'>two</p>
     <p class='special last'>three</p>
+  </div>
+
+  <ul>
+    <li class='first' id='special'>
+      <a href="first.html" id='link'>Link</a>
+      <a href="foo">bar</a>
+    </li>
+    <li>
+      I have no attributes
+    </li>
+  </ul>
+
+  <div id="result">
+    <h1 class='result-heading'>I'm child of the result</h1>
   </div>
 </body>
 <script src='./index.js'></script>

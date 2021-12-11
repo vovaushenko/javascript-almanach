@@ -1,9 +1,20 @@
-function sum(a = 1, b = 2) {
-	console.log(arguments);
-	return a + b;
-}
+// DP - review
+// can sum memo ✅, how sum ✅
+// canConstruct
 
-console.log(sum.length);
-console.log(sum.toString());
+const canConstruct = (target, wordBank) => {
+	if (target === '') return true;
 
-console.log(sum(4, 5, 6, 7, 8));
+	for (const prefix of wordBank) {
+		if (target.startsWith(prefix)) {
+			const suffix = target.replace(prefix, '');
+			if (canConstruct(suffix, wordBank)) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+};
+
+console.log(canConstruct('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd']));
