@@ -13,3 +13,5 @@ link.addEventListener('click', function (e) {
 	alert('not a default behavior');
 	console.log(this);
 });
+
+//! Current target and target
