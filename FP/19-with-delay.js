@@ -9,3 +9,16 @@ const withDelay = (fn, delay) => {
 		return promise;
 	};
 };
+
+const delay =
+	(fn, delay) =>
+	(...args) =>
+		new Promise((res, rej) => {
+			setTimeout(() => {
+				try {
+					res(fn(...args));
+				} catch (error) {
+					rej(err);
+				}
+			}, delay);
+		});
