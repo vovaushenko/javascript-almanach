@@ -13,7 +13,7 @@ var point = {
 	z: 14,
 };
 
-const point = () => {
+const point1 = () => {
 	const x = 10;
 	const y = 12;
 	const z = 14;

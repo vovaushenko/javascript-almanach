@@ -40,7 +40,7 @@ const uniqueWords = (str) => unique(words(str));
 
 const compose2 = (fn2, fn1) => (originalValue) => fn2(fn1(originalValue));
 
-var uniqueWords = compose2(unique, words);
+var uniqueWords1 = compose2(unique, words);
 /*
 Did you notice that we defined the parameter order as fn2,fn1 , and furthermore
 that it’s the second function listed (aka fn1 parameter name) that runs first, then the

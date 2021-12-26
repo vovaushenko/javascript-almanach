@@ -1,17 +1,16 @@
 'use strict';
 
-const once =
-	(fn) =>
-	(...args) => {
-		if (!fn) return;
-		const res = fn(...args);
-		fn = null;
-		return res;
-	};
+const pipe =
+	(...fns) =>
+	(x) =>
+		fns.reduce((v, f) => f(v), x);
 
-const sum2 = (x, y) => x + y;
+const addOne = (x) => x + 1;
+const square = (x) => x ** 2;
+const double = (x) => x * 2;
+const tripple = (x) => x * 3;
 
-const onceSum = once(sum2);
+const complicatedCalc = pipe(addOne, square, square, double, tripple);
 
-console.log(onceSum(2, 3));
-console.log(onceSum(2, 3));
+const res = complicatedCalc(2);
+console.log(res);
