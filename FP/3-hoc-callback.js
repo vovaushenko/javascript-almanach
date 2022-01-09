@@ -80,6 +80,6 @@ console.log('end');
 
 const fnn = () => console.log('Callback from timer');
 
-const timeout = (fn, interval) => setTimeout(fnn, interval);
+const timeout = (fn, interval) => setTimeout(fn, interval);
 
 timeout(fnn, 3000);
