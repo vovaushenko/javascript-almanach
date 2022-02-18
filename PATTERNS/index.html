@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<!--
+ Copyright (c) 2014, 2021, Oracle and/or its affiliates.
+ Licensed under The Universal Permissive License (UPL), Version 1.0
+ as shown at https://oss.oracle.com/licenses/upl/
+ -->
+<html lang="en-us">
+
+
+<head>
+  <title>CX Sales For Microsoft 365</title>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1">
+  <script type="text/javascript">
+    window.cxo = {
+      replaceState: window.history.replaceState,
+      pushState: window.history.pushState
+    };
+  </script>
+  <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js">
+  </script>
+  <link rel="icon" href="https://www.oracle.com/favicon.ico" type="image/x-icon" />
+
+  <!-- This is the main css file for the default theme -->
+  <!-- injector:theme -->
+  <link rel="stylesheet" href="css/libs/oj/v11.1.0/redwood/oj-redwood-min.css" type="text/css" />
+  <!-- endinjector -->
+  <!-- This contains icon fonts used by the starter template -->
+  <link rel="stylesheet" id="uxiconFont"
+    href="https://static.oracle.com/cdn/fnd/gallery/2204.0.0/images/iconfont/ojuxIconFont.min.css">
+  <link rel="stylesheet" id="oracleFont"
+    href="https://static.oracle.com/cdn/fnd/gallery/2204.0.0/OracleFont/OracleFont.min.css">
+
+  <!-- This is where you would add any app specific styling -->
+  <link rel="stylesheet" href="css/app.css" type="text/css" />
+
+</head>
+
+<body>
+  <div id="globalBody" class="oj-web-applayout-page">
+    <div role="main" class="oj-web-applayout-max-width">
+      <div id="pageContent">
+        <div id="messageSpacer"></div>
+
+        <div class="live-region">
+          <div aria-atomic="false" :aria-live="[[accessibilityMessage().level]]">
+            <oj-bind-text value="[[accessibilityMessage().text]]">
+            </oj-bind-text>
+          </div>
+        </div>
+
+        <oj-module config="[[module.koObservableConfig]]">
+        </oj-module>
+
+        <oj-messages messages="[[messages]]" position="[[messagesPosition]]" display="notification"
+          on-oj-close="[[messageCloseHandler]]">
+          <template slot="messageTemplate" data-oj-as="message">
+            <oj-message message="[[message.data]]">
+              <div slot="detail" class="oj-flex oj-sm-flex-direction-column">
+                <oj-bind-dom config="[[message.data.DOMString]]">
+                </oj-bind-dom>
+                <oj-bind-if test="[[message.data.buttons]]">
+                  <div class="oj-flex">
+                    <oj-bind-for-each data="[[message.data.buttons]]">
+                      <template>
+                        <oj-button chroming="borderless" on-oj-action="[[$current.data.callback]]">
+                          <oj-bind-text value="[[$current.data.text]]">
+                          </oj-bind-text>
+                        </oj-button>
+                      </template>
+                    </oj-bind-for-each>
+                  </div>
+                </oj-bind-if>
+              </div>
+            </oj-message>
+          </template>
+        </oj-messages>
+        <oj-bind-if test="[[module.koObservableConfig() && !module.koObservableConfig().viewModel]]">
+          <div class="loading-container">
+            <div class="concentric-circles">
+            </div>
+          </div>
+        </oj-bind-if>
+      </div>
+    </div>
+    <oj-bind-if test="[[isLoggedIn()]]">
+      <div class="oj-offcanvas-outer-wrapper" :style="[[{position:'initial'}]]">
+        <div id="oDrawer" class="oj-offcanvas-start oj-offcanvas-overlay-shadow">
+          <div class="navigator-outer-container">
+            <div class="navigator-container">
+              <cxo-navigator items="[[navigationPaneItems]]" on-toggle-navigator="[[toggleNavigator.bind($data)]]">
+              </cxo-navigator>
+            </div>
+          </div>
+          <oj-button class="nav-bar-close-button" on-oj-action="[[closeNavigator.bind($data)]]" chroming="borderless"
+            display="icons">
+            <span slot="endIcon" class="oj-ux-ico-close cxo-icon-color-contrast"></span>
+          </oj-button>
+        </div>
+        <div id="oMain">
+          <cxo-ask-oracle id="askOracle" on-ask-oracle-search="[[askOracleSearch.bind($data)]]"
+            on-toggle-navigator="[[toggleNavigator.bind($data)]]">
+          </cxo-ask-oracle>
+        </div>
+      </div>
+    </oj-bind-if>
+    <cxo-action-sheet id="actionSheet"></cxo-action-sheet>
+    <cxo-dialog id="alertDialog"></cxo-dialog>
+  </div>
+
+  <script type="text/javascript">
+    (async function () {
+      await Office.onReady();
+      if (window.cxo) {
+        window.history.replaceState = window.history
+          .replaceState || window.cxo.replaceState;
+        window.history.pushState = window.history
+          .pushState || window.cxo.pushState;
+      }
+      const JS_FILES = [
+        'bundle.js'
+      ];
+      const CSS_FILES = [
+        'app.css'
+      ];
+      const cdnFolder = CDN_PATH;
+      const release = RELEASE;
+      const minBundle = BUNDLE;
+      const manifestFileName = 'manifest.json';
+      const isDebug = IS_DEBUG;
+      let manifest = null;
+      let loopBack = (minBundle !== 0);
+      let timestamp = new window.Date().getTime();
+
+      function addJSFiles(url) {
+        JS_FILES.forEach(function (fileName) {
+          let script = document.createElement(
+            'script');
+          script.setAttribute('src', [url, 'js',
+            fileName
+          ]
+            .join('/'));
+          script.setAttribute('type',
+            'text/javascript');
+          document.body.appendChild(script);
+        });
+      }
+
+      function addCSSFiles(url) {
+        let documentHead = document.getElementsByTagName(
+          'head')[0];
+        CSS_FILES.forEach(function (fileName) {
+          let stylesheet = document.createElement(
+            'link');
+          stylesheet.setAttribute('href', [url,
+            'css',
+            fileName
+          ].join('/'));
+          stylesheet.setAttribute('type',
+            'text/css');
+          stylesheet.setAttribute('rel',
+            'stylesheet');
+          documentHead.appendChild(stylesheet);
+        });
+      }
+
+      async function getManifest(bundle, useTimestamp) {
+        let requestUrl = [cdnFolder, release, bundle,
+          manifestFileName
+        ].join('/');
+        if (useTimestamp) {
+          requestUrl = requestUrl + '?ts=' +
+            timestamp;
+        }
+        return fetch(requestUrl)
+          .then(function (response) {
+            switch (response.status) {
+              case 200:
+                return response.json();
+              case 404:
+                return '404';
+              default:
+                console.warn(
+                  'Unexpected Response received from CDN: ',
+                  response);
+                return false;
+            }
+          })
+          .catch(function (error) {
+            console.error(
+              'Network error when fetching manifest: ',
+              error);
+            return false;
+          });
+      }
+
+      async function getValidManifest(currentManifest, bundle,
+        useTimestamp) {
+        if (isDebug) {
+          return await getManifest('', useTimestamp);
+        } else {
+          let status = await getManifest(bundle,
+            useTimestamp);
+          if ('404' === status) {
+            if (!useTimestamp) {
+              return await getValidManifest(
+                currentManifest,
+                bundle, !useTimestamp);
+            } else {
+              if (loopBack && bundle > 0) {
+                bundle = 0;
+                loopBack = false;
+                return await getValidManifest(
+                  currentManifest,
+                  bundle, useTimestamp);
+              } else {
+                return currentManifest;
+              }
+            }
+          } else if (typeof status === 'object') {
+            currentManifest = status;
+            bundle += 1;
+            loopBack = false;
+            return await getValidManifest(
+              currentManifest,
+              bundle,
+              false);
+          } else {
+            return currentManifest;
+          }
+        }
+
+      };
+
+      getValidManifest(manifest, minBundle, false).then(
+        function (
+          manifest) {
+          if (manifest) {
+            addJSFiles(manifest.sourceURL);
+            addCSSFiles(manifest.sourceURL);
+          } else {
+            console.error(
+              'Unable to fetch manifest.json from CDN'
+            )
+          }
+        });
+    })();
+
+  </script>
+
+  <!-- This injects script tags for the main javascript files -->
+  <!-- injector:scripts -->
+  <!-- endinjector -->
+
+</body>
+
+</html>
