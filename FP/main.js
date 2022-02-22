@@ -3,58 +3,45 @@
 const increment = (x) => x + 1;
 const decrement = (x) => x - 1;
 const double = (x) => x * 2;
-const tripple = (x) => x * 3;
-const square = (x) => x ** 2;
-const sum = (...nums) => nums.reduce((acc, n) => acc + n, 0);
-const sum5 = (a, b, c, d, e) => a + b + c + d + e;
+const triple = (x) => x * 3;
+const sum4 = (a, b, c, d) => a + b + c + d;
+const sum = (...nums) => nums.reduce((a, b) => a + b, 0);
 
-// partial ✅ , pipe ✅  , compose ✅ , curry ✅ , wrappers ✅ , chaining, functors, monads
+// partial✅ , pipe ✅, compose ✅, curry✅, wrappers  , chaining, functors, monads
 
 const partial =
-	(fn, ...initialArgs) =>
+	(fn, initialArg) =>
 	(...laterArgs) =>
-		fn(...initialArgs, ...laterArgs);
+		fn(initialArg, ...laterArgs);
 
-const pipe =
+const compose =
 	(...fns) =>
-	(inialArg) =>
-		fns.reduce((v, f) => f(v), inialArg);
+	(arg) =>
+		fns.reduce((v, f) => f(v), arg);
+
+// We want to be able to compose functions into one solid function.
+// For instance, sophisticated operation => increement number , double , triple it , increment
+
+const sophisticated = (num) => {
+	let incremented = increment(num);
+	let doubled = double(incremented);
+	let trippled = triple(doubled);
+	return trippled;
+};
+
+// At times, we need to expect function to get some number of Arguments
+// for being able to be called
+// this looks like "f"     f(1)(3)(5)(10)  f(1,3)(5)(10) f(1,3,5,10) f(1)(3,5,10)
 
 const curry =
 	(fn) =>
-	(...args) =>
-		fn.length > args.length ? curry(fn.bind(null, ...args)) : fn(...args);
-
-const extend = (fn) => {
-	const f = fn;
-	const cache = new Map();
-
-	const wrapper = (...args) => {
-		if (!fn) return;
-		const key = args.join('*');
-		if (cache.has(key)) {
-			console.log('from cache');
-			return cache.get(key);
+	(...args) => {
+		if (fn.length > args.length) {
+			const f = fn.bind(null, ...args);
+			return curry(f);
+		} else {
+			return fn(...args);
 		}
-
-		const res = fn(...args);
-		cache.set(key, res);
-
-		return res;
 	};
 
-	wrapper.on = () => (fn = f);
-	wrapper.off = () => (fn = null);
-	wrapper.throttle = () => {};
-	wrapper.debounce = () => {};
-
-	return wrapper;
-};
-
-const maybe = (x) => (fn) => {
-	if (fn && x) {
-		return maybe(fn(x));
-	} else {
-		return maybe(null);
-	}
-};
+const curriedSum = curry(sum4);
