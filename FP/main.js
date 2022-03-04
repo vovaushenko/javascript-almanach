@@ -1,37 +1,59 @@
 'use strict';
 
+/**
+ *@FUNCTIONAL Programming in JS
+ */
 const increment = (x) => x + 1;
 const decrement = (x) => x - 1;
 const double = (x) => x * 2;
-const triple = (x) => x * 3;
-const sum4 = (a, b, c, d) => a + b + c + d;
+const sum3 = (a, b, c) => a + b + c;
 const sum = (...nums) => nums.reduce((a, b) => a + b, 0);
 
-// partial✅ , pipe ✅, compose ✅, curry✅, wrappers  , chaining, functors, monads
+// Agenda
+// - bare basics of FP
+// 1) partial application ✅
+// 2) piping (pipe and compose) ✅
+// 3) currying ✅
+// 4) monads aka functors aka functional objects ✅
+// 5) chaining
+
+const partial1 =
+	(f, arg1) =>
+	(...args) =>
+		f(arg1, ...args);
+
+const twoPlus = partial1(sum, 2);
 
 const partial =
-	(fn, initialArg) =>
+	(f, ...initialArgs) =>
 	(...laterArgs) =>
-		fn(initialArg, ...laterArgs);
+		f(...initialArgs, ...laterArgs);
 
-const compose =
+const twoPlusThree = partial(sum, 2, 3);
+
+// fetch -> process -> call db -> fetch -> return response
+// increment -> double -> decrement -> double
+
+const sophisticatedOp = (num) => {
+	const r1 = increment(num);
+	const r2 = double(r1);
+	const r3 = decrement(r2);
+	return double(r3);
+};
+
+const betterOp = (num) => double(decrement(double(increment(num))));
+
+// P I P E
+
+const pipe =
 	(...fns) =>
 	(arg) =>
 		fns.reduce((v, f) => f(v), arg);
 
-// We want to be able to compose functions into one solid function.
-// For instance, sophisticated operation => increement number , double , triple it , increment
+const optimalOP = pipe(increment, double, decrement, double);
 
-const sophisticated = (num) => {
-	let incremented = increment(num);
-	let doubled = double(incremented);
-	let trippled = triple(doubled);
-	return trippled;
-};
-
-// At times, we need to expect function to get some number of Arguments
-// for being able to be called
-// this looks like "f"     f(1)(3)(5)(10)  f(1,3)(5)(10) f(1,3,5,10) f(1)(3,5,10)
+// C u r r y i n g
+// sum3(1,2,3) -> 6  sum3(1)(2,3) -> 6 sum3(1)(2)(3)
 
 const curry =
 	(fn) =>
@@ -44,4 +66,10 @@ const curry =
 		}
 	};
 
-const curriedSum = curry(sum4);
+const curriedSum = curry(sum3);
+
+console.log(curriedSum(1)(3)(2));
+
+const maybe = (x) => (fn) => fn && x ? maybe(fn(x)) : maybe(null);
+
+maybe(5)(increment)(double)(increment)(console.log);
