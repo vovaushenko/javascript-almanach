@@ -1,59 +1,54 @@
 'use strict';
 
-/**
- *@FUNCTIONAL Programming in JS
- */
+/* === Functional Programming === */
+
+// if FP we embrace the use of a mathematical approach to solving some problems
+// we've got functions
+// functions are usually pure, all pure
+// y = 1 + 2 * x   -> Immutable connection
+// functions must be I M M U T A B L E
+// are easily testable
+
+// API's of FP
+// 1) partial application of functions ✅
+// 2) piping and composing functions ✅
+// 3) currying ✅
+// 4) wrapping, high-order fns, chaining and using mixin-s
+// 5) monads aka functors, aka functional objects
+
+const sum = (...args) => args.reduce((a, b) => a + b, 0);
+const sum3 = (a, b, c) => a + b + c; // has pre-determined "arity" arity of sum3 === 3
 const increment = (x) => x + 1;
 const decrement = (x) => x - 1;
 const double = (x) => x * 2;
-const sum3 = (a, b, c) => a + b + c;
-const sum = (...nums) => nums.reduce((a, b) => a + b, 0);
-
-// Agenda
-// - bare basics of FP
-// 1) partial application ✅
-// 2) piping (pipe and compose) ✅
-// 3) currying ✅
-// 4) monads aka functors aka functional objects ✅
-// 5) chaining
-
-const partial1 =
-	(f, arg1) =>
-	(...args) =>
-		f(arg1, ...args);
-
-const twoPlus = partial1(sum, 2);
 
 const partial =
-	(f, ...initialArgs) =>
+	(fn, ...initialArgs) =>
 	(...laterArgs) =>
-		f(...initialArgs, ...laterArgs);
+		fn(...initialArgs, ...laterArgs);
 
-const twoPlusThree = partial(sum, 2, 3);
-
-// fetch -> process -> call db -> fetch -> return response
-// increment -> double -> decrement -> double
-
-const sophisticatedOp = (num) => {
-	const r1 = increment(num);
-	const r2 = double(r1);
-	const r3 = decrement(r2);
-	return double(r3);
+// piping
+const sophisticatedOperation = (arg) => {
+	// 1 double
+	let res = double(arg);
+	// 2 decrement
+	res = decrement(res);
+	// 3 increment
+	res = increment(res);
+	// 4 double
+	return double(res);
 };
-
-const betterOp = (num) => double(decrement(double(increment(num))));
-
-// P I P E
+const sophisticatedFP = (arg) => double(increment(decrement(double(arg))));
 
 const pipe =
 	(...fns) =>
-	(arg) =>
-		fns.reduce((v, f) => f(v), arg);
+	(initialArg) =>
+		fns.reduce((v, f) => f(v), initialArg);
 
-const optimalOP = pipe(increment, double, decrement, double);
+const sophisticatedFPoptimal = pipe(double, decrement, increment, double);
 
-// C u r r y i n g
-// sum3(1,2,3) -> 6  sum3(1)(2,3) -> 6 sum3(1)(2)(3)
+// currying
+// f(x,y,z)  -> f(x,y,z)  -> f(x)(y,z)  f(x)(y)(z)
 
 const curry =
 	(fn) =>
@@ -67,9 +62,4 @@ const curry =
 	};
 
 const curriedSum = curry(sum3);
-
-console.log(curriedSum(1)(3)(2));
-
-const maybe = (x) => (fn) => fn && x ? maybe(fn(x)) : maybe(null);
-
-maybe(5)(increment)(double)(increment)(console.log);
+console.log(curriedSum(1)(2)(3));

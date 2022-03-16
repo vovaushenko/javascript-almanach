@@ -1,46 +1,62 @@
 'use strict';
 
 // FP
-
 const increment = (x) => x + 1;
-const decrement = (x) => x - 1;
 const double = (x) => x * 2;
-const sum = (...nums) => nums.reduce((a, b) => a + b, 0);
-const sum4 = (a, b, c, d) => a + b + c + d;
+const decrement = (x) => x - 1;
+const square = (x) => x ** 2;
 
-// Partial Application
+const sum4 = (a, b, c, d) => a + b + c + d;
+const sum = (...nums) => nums.reduce((acc, num) => acc + num, 0);
+
+// AGENDA
+// - partial application
+// - composition
+// - currying
+// - higher-order fns and wrappers and mixins
+// - monads aka functors aka functional objects
+// - chaining
+
+// bind
 
 const partial =
-	(fn, ...initialArgs) =>
+	(fn, arg) =>
 	(...laterArgs) =>
-		fn(...initialArgs, ...laterArgs);
+		fn(arg, ...laterArgs);
 
-// sometimes we want to make a chain of operations, e.g.
+const twoPlus = partial(sum, 2);
 
-const sophistcated = (num) => {
+// composition
+
+// sophisticated operation -> increments , doubles, triples and then decrements
+
+const sophisticatedImperative = (num) => {
 	const r1 = increment(num);
 	const r2 = double(r1);
-	// ...
-	const result = decrement(r2);
-
-	return result;
+	return square(r2);
 };
 
-const sophistcated2 = (num) => decrement(double(increment(num)));
-
-// Pipe and compose
+//  [...fns] -> 2 fns or 50fns -> we've got the starting point
 
 const pipe =
 	(...fns) =>
 	(initialArg) =>
 		fns.reduce((v, f) => f(v), initialArg);
 
-const sophistcated3 = pipe(increment, double, decrement);
+const sophisticatedFP = pipe(
+	increment,
+	increment,
+	increment,
+	double,
+	double,
+	increment
+);
 
-// currying -> taste of curry
-// f -> f(1,2,3) => 6
-// f(1)(2)(3) => 6
-// f(1,2)(3) => 6
+// == currying ==
+// fn(a,b,c,d) -> fn(a)(b,c)(d) -> fn(...args) -> result
+
+// sum4(1,2,3,4) -> 10
+// sum4(1)-> sum4(2,3) -> sum4(4)
 
 const curry =
 	(fn) =>
@@ -49,10 +65,60 @@ const curry =
 			const f = fn.bind(null, ...args);
 			return curry(f);
 		} else {
+			// 🔥 enough args
 			return fn(...args);
 		}
 	};
 
 const curriedSum = curry(sum4);
 
-console.log(curriedSum(1)(2)(3)(4));
+// wrapper aka h-o fns
+
+const once =
+	(f) =>
+	(...args) => {
+		if (!f) return;
+		const res = f(...args);
+		f = null;
+		return res;
+	};
+
+const onceSum = once(increment);
+
+const limit = (fn, maxCalls) => {
+	let called = 0;
+	return (...args) => {
+		if (called === maxCalls) return;
+		called++;
+		return fn(...args);
+	};
+};
+
+const universal = (fn) => {
+	const f = fn;
+
+	const wrapper = (...args) => {
+		if (!fn) return 'The function is sleeeeeeeping';
+		return fn(...args);
+	};
+
+	wrapper.limit = () => {};
+	wrapper.on = () => (fn = f);
+	wrapper.off = () => (fn = null);
+
+	return wrapper;
+};
+
+const inc = universal(increment);
+
+console.log(inc(1));
+console.log(inc(1));
+inc.off();
+console.log(inc(1));
+console.log(inc(1));
+console.log(inc(1));
+console.log(inc(1));
+console.log(inc(1));
+inc.on();
+console.log(inc(1));
+console.log(inc(1));
