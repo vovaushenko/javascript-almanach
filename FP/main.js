@@ -1,54 +1,33 @@
 'use strict';
 
-/* === Functional Programming === */
+// FP
+// - Partial Application
+// - Functional composition
+// - Currying
+// - Chaining
+// - Monads aka Functors aka Functional Objects
+// - async composition
 
-// if FP we embrace the use of a mathematical approach to solving some problems
-// we've got functions
-// functions are usually pure, all pure
-// y = 1 + 2 * x   -> Immutable connection
-// functions must be I M M U T A B L E
-// are easily testable
-
-// API's of FP
-// 1) partial application of functions ✅
-// 2) piping and composing functions ✅
-// 3) currying ✅
-// 4) wrapping, high-order fns, chaining and using mixin-s
-// 5) monads aka functors, aka functional objects
-
-const sum = (...args) => args.reduce((a, b) => a + b, 0);
-const sum3 = (a, b, c) => a + b + c; // has pre-determined "arity" arity of sum3 === 3
+const double = (x) => x * 2;
 const increment = (x) => x + 1;
 const decrement = (x) => x - 1;
-const double = (x) => x * 2;
+const sum3 = (x, y, z) => x + y + z;
+const sum = (...nums) => nums.reduce((acc, num) => acc + num, 0);
+
+const partial2 =
+	(f1, arg) =>
+	(...args) =>
+		f1(arg, ...args);
 
 const partial =
-	(fn, ...initialArgs) =>
+	(f1, ...initialArgs) =>
 	(...laterArgs) =>
-		fn(...initialArgs, ...laterArgs);
+		f1(...initialArgs, ...laterArgs);
 
-// piping
-const sophisticatedOperation = (arg) => {
-	// 1 double
-	let res = double(arg);
-	// 2 decrement
-	res = decrement(res);
-	// 3 increment
-	res = increment(res);
-	// 4 double
-	return double(res);
-};
-const sophisticatedFP = (arg) => double(increment(decrement(double(arg))));
-
-const pipe =
+const compose =
 	(...fns) =>
-	(initialArg) =>
-		fns.reduce((v, f) => f(v), initialArg);
-
-const sophisticatedFPoptimal = pipe(double, decrement, increment, double);
-
-// currying
-// f(x,y,z)  -> f(x,y,z)  -> f(x)(y,z)  f(x)(y)(z)
+	(arg) =>
+		fns.reduce((v, f) => f(v), arg);
 
 const curry =
 	(fn) =>
@@ -61,5 +40,44 @@ const curry =
 		}
 	};
 
-const curriedSum = curry(sum3);
-console.log(curriedSum(1)(2)(3));
+const curryShort =
+	(fn) =>
+	(...args) =>
+		fn.length > args.length ? curryShort(fn.bind(null, ...args)) : fn(...args);
+
+const maybe = (val) => (f) => val && f ? maybe(f(val)) : maybe(null);
+
+const once = (fn) => {
+	return (...args) => {
+		if (!fn) return;
+		const res = fn(...args);
+		fn = null;
+		return res;
+	};
+};
+
+const limit = (fn, callLimit) => {
+	let calledTimes = 0;
+	return (...args) => {
+		if (calledTimes === callLimit) return;
+		calledTimes++;
+		return fn(...args);
+	};
+};
+
+const universalWrapper = (fn) => {
+	const f = fn;
+
+	const wrapper = (...args) => {
+		if (!fn) return 'Function is sleeping';
+		return fn(...args);
+	};
+
+	wrapper.limit = (limit) => {};
+	wrapper.on = () => (fn = f);
+	wrapper.off = () => (fn = null);
+
+	return wrapper;
+};
+
+const extendedInc = universalWrapper(increment);
