@@ -1,33 +1,65 @@
 'use strict';
 
 // FP
-// - Partial Application
-// - Functional composition
-// - Currying
-// - Chaining
-// - Monads aka Functors aka Functional Objects
-// - async composition
 
-const double = (x) => x * 2;
+// FP is mainly about embracing the approach to building software using the mathematical rigorous framework
+// we embrace the use and re-use of functions
+
+// Partial Application
+// Functional composition and piping
+// Currying
+// Chaining
+// Mixins and Functional Objects and Higher-order functions
+// Functors aka Monads aka Functional Objects
+
 const increment = (x) => x + 1;
 const decrement = (x) => x - 1;
-const sum3 = (x, y, z) => x + y + z;
-const sum = (...nums) => nums.reduce((acc, num) => acc + num, 0);
+const double = (x) => x * 2;
+const square = (x) => x ** 2;
+const sum4 = (a, b, c, d) => a + b + c + d;
+const sum = (...nums) => nums.reduce((total, num) => total + num, 0);
 
-const partial2 =
-	(f1, arg) =>
-	(...args) =>
-		f1(arg, ...args);
+// y = x * 2  -> x=1 y = 2;  x=3 => y = 6; x =50 -> y =100 -> can be easily tested
+// no sideeffects
+
+const simplePartial = (f, arg1) => (arg2) => f(arg1, arg2);
+
+const sum2 = (x, y) => x + y;
 
 const partial =
-	(f1, ...initialArgs) =>
+	(f, ...initialArgs) =>
 	(...laterArgs) =>
-		f1(...initialArgs, ...laterArgs);
+		f(...initialArgs, ...laterArgs);
+
+// Compose and pipe
+
+const sophisticatedMathOp = (x) => {
+	const res1 = increment(x);
+	const res2 = double(res1);
+	const res3 = square(res2);
+	return res3;
+};
+
+const sophisticated2 = (x) => square(double(increment(x)));
 
 const compose =
 	(...fns) =>
-	(arg) =>
-		fns.reduce((v, f) => f(v), arg);
+	(initialArg) =>
+		fns.reduce((v, f) => f(v), initialArg);
+
+const sophisticated3 = compose(
+	increment,
+	double,
+	square,
+	increment,
+	double,
+	square,
+	double
+);
+
+// function has pre-determined arity, arity is just a fancy way to describe the number of input arguments
+// eg, sum(x,y,z) -> has arity 3, whereas function x=>x+1 -> has arity 1
+// x y z  ->      sum(x,y,z)  sum(x)(y)(z)
 
 const curry =
 	(fn) =>
@@ -40,44 +72,6 @@ const curry =
 		}
 	};
 
-const curryShort =
-	(fn) =>
-	(...args) =>
-		fn.length > args.length ? curryShort(fn.bind(null, ...args)) : fn(...args);
+const curried = curry(sum4);
 
-const maybe = (val) => (f) => val && f ? maybe(f(val)) : maybe(null);
-
-const once = (fn) => {
-	return (...args) => {
-		if (!fn) return;
-		const res = fn(...args);
-		fn = null;
-		return res;
-	};
-};
-
-const limit = (fn, callLimit) => {
-	let calledTimes = 0;
-	return (...args) => {
-		if (calledTimes === callLimit) return;
-		calledTimes++;
-		return fn(...args);
-	};
-};
-
-const universalWrapper = (fn) => {
-	const f = fn;
-
-	const wrapper = (...args) => {
-		if (!fn) return 'Function is sleeping';
-		return fn(...args);
-	};
-
-	wrapper.limit = (limit) => {};
-	wrapper.on = () => (fn = f);
-	wrapper.off = () => (fn = null);
-
-	return wrapper;
-};
-
-const extendedInc = universalWrapper(increment);
+console.log(curried(1)(2, 3, 4));
