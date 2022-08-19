@@ -2,3 +2,7 @@
 https://github.com/PiyushSuthar/Windows-11-Web
 
 https://github.com/HowProgrammingWorks/Index
+
+
+=3.05.2022=
+1) Date and time, JSON methods
